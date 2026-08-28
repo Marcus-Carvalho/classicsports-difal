@@ -1,0 +1,59 @@
+CLASSIC SPORTS - GUIAS DIFAL  v1.1.0
+=====================================
+
+O QUE FAZ
+Le os ZIPs de guias baixados da Sefaz, identifica a linha digitavel de cada
+PDF (GNRE ou DARE-SP) e gera:
+  1) a planilha de conferencia (Empresa / Codigo de Barras / Valor);
+  2) os arquivos no layout do banco C6, com no maximo 100 pagamentos cada.
+
+INSTALACAO
+Use o ClassicSports_DIFAL_Instalador.exe. Os arquivos do programa vao dentro
+do proprio .exe, entao ele instala sem depender de internet. Ele cria a pasta,
+localiza o Python (instala o 3.12 se nao houver), instala as bibliotecas, cria
+o atalho na Area de Trabalho e registra o programa em "Adicionar ou Remover
+Programas". Se algum arquivo faltar dentro do .exe, ele tenta baixar do GitHub.
+
+Para gerar o .exe: rode o build_instalador.bat na pasta do programa.
+
+COMO USAR
+1) Baixe os ZIPs da Sefaz.
+2) Abra o programa e clique em "+ Adicionar ZIPs". Pode marcar quantos quiser
+   de uma vez (Ctrl ou Shift), de pastas diferentes. Repetidos sao ignorados.
+   O botao "+ Pasta inteira" adiciona todos os ZIPs de uma pasta de uma vez.
+3) Confira na aba LOTE se as empresas foram reconhecidas.
+4) Clique em PROCESSAR LOTE.
+5) Va na aba BANCO C6, confirme a data de pagamento e clique em
+   GERAR ARQUIVOS C6.
+6) Abra o primeiro arquivo no Excel para conferir e suba no banco.
+
+SAIDAS  (dentro da pasta do programa)
+  planilhas\Guias_DIFAL_<data>.xlsx        planilha de conferencia
+  planilhas\relatorio_<data>.txt           resumo do lote
+  planilhas\lote_<data>.json               dados brutos (auditoria)
+  planilhas\banco_c6_<data>\C6_*.xlsx      arquivos para subir no banco
+  planilhas\banco_c6_<data>\conferencia.txt
+
+REGRA DOS 100
+O C6 aceita 100 pagamentos por arquivo. O programa quebra sozinho e numera
+C6_EMPRESA_01de03, 02de03, 03de03. Com "um arquivo por empresa" marcado,
+nenhum arquivo mistura CNPJs diferentes.
+
+REGRAS QUE O PROGRAMA SEGUE
+- O codigo e copia literal da linha digitavel, sem espacos e sem hifens.
+- Nunca recalcula, corrige ou inventa digito. Nunca remove DV.
+- Valor: GNRE usa "Total a Recolher"; DARE-SP usa "08 - Valor Total".
+- So remove duplicata quando o codigo de barras e identico dentro do lote.
+- PDF sem codigo nunca e descartado em silencio: aparece na aba CONFERENCIA.
+- Empresa fora da lista das 21 nao entra na planilha, e fica listada a parte.
+- Nao afirma se guia esta paga, vencida ou cancelada - isso depende do banco.
+- O modelo do banco nao e alterado: o programa so preenche a aba BOLETOS.
+
+ATUALIZACAO
+Aba ATUALIZACOES -> Verificar -> Atualizar agora.
+A instalacao so e trocada depois que todos os arquivos baixam e passam na
+verificacao de sintaxe. Planilhas e configuracoes nunca sao tocadas.
+
+PARA PUBLICAR UMA NOVA VERSAO (so o Marcus)
+  python publicar_atualizacao.py --notas "o que mudou"
+Depois: GitHub Desktop -> Summary -> Commit to main -> Push origin.
